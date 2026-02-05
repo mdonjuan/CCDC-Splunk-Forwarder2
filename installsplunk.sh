@@ -6,10 +6,15 @@
 
 # --- CONFIGURATION ---
 
-SPLUNK_SERVER_IP="172.20.242.20"         # Change to your Splunk server IP
-SPLUNK_RECEIVE_PORT="9997"               # Default receiving port on Splunk server
+SPLUNK_SERVER_IP="172.20.242.20"         # Splunk server IP
+SPLUNK_RECEIVE_PORT="9997"               # Splunk receiving port
 DOWNLOAD_URL="https://download.splunk.com/products/universalforwarder/releases/10.2.0/linux/splunkforwarder-10.2.0-d749cb17ea65-linux-amd64.tgz"
 INSTALL_DIR="/opt"
+
+# --- PROMPT FOR SPLUNK ENTERPRISE CREDENTIALS ---
+read -p "Enter Splunk Enterprise admin username: " SPLUNK_ADMIN
+read -s -p "Enter Splunk Enterprise admin password: " SPLUNK_PASSWORD
+echo ""
 
 # --- DOWNLOAD TGZ ---
 echo "[*] Downloading Splunk Universal Forwarder..."
@@ -28,7 +33,7 @@ sudo $SPLUNK_HOME/bin/splunk enable boot-start
 
 # --- CONFIGURE FORWARDING SERVER ---
 echo "[*] Adding forward-server $SPLUNK_SERVER_IP:$SPLUNK_RECEIVE_PORT..."
-sudo $SPLUNK_HOME/bin/splunk add forward-server $SPLUNK_SERVER_IP:$SPLUNK_RECEIVE_PORT -auth admin:changeme
+sudo $SPLUNK_HOME/bin/splunk add forward-server $SPLUNK_SERVER_IP:$SPLUNK_RECEIVE_PORT -auth "$SPLUNK_ADMIN:$SPLUNK_PASSWORD"
 
 # --- RESTART FORWARDER ---
 echo "[*] Restarting Splunk forwarder..."
